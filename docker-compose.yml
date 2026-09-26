@@ -1,0 +1,28 @@
+# 使い方:
+#   先に ../rex-carte で docker compose --profile app up を起動しておく（API: 8000 / Mailpit: 8025）
+#   docker compose --profile app up   … RexBook を起動（http://localhost:3100）
+name: rex-book
+
+services:
+  web:
+    profiles: [app]
+    build: .
+    environment:
+      # コンテナ内からホストの RexCarte API を呼ぶ
+      REXCARTE_API_URL: http://host.docker.internal:8000
+      SESSION_COOKIE_SECURE: "false"
+      APP_URL: http://localhost:3100
+      # ボリュームマウント時にファイル変更を検知させる
+      WATCHPACK_POLLING: "true"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    ports:
+      - "3100:3100"
+    volumes:
+      - .:/app
+      - web_node_modules:/app/node_modules
+      - web_next:/app/.next
+
+volumes:
+  web_node_modules:
+  web_next:

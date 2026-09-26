@@ -1,0 +1,19 @@
+node_modules/
+.next/
+out/
+coverage/
+playwright-report/
+test-results/
+.env
+.env.*
+!.env.example
+.DS_Store
+build/
+.vercel
+*.pem
+*.tsbuildinfo
+next-env.d.ts
+npm-debug.log*
+
+# E2E のログイン状態（Cookie）。認証情報を含むためリポジトリに含めない
+tests/e2e/.auth/

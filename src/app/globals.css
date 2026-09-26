@@ -1,0 +1,98 @@
+@import "tailwindcss";
+
+/*
+ * ブランドカラーはローズゴールド → ワインレッドの 2 色。深みのある高級感を保ちつつ、背景は明るく、面は白で軽く見せる。
+ * 黒や濃色を面の主役にはしない（暗い印象になるため）。力強さは、ボタン・選択中の状態のグラデーションで出す。
+ * 文字のフォントは変えない（システムの和文フォント）。
+ */
+:root {
+  color-scheme: light;
+  --background: #fdf9f8;
+  --foreground: #1c1917;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: system-ui, -apple-system, "Hiragino Sans", "Hiragino Kaku Gothic ProN", "Noto Sans JP", "Yu Gothic", sans-serif;
+
+  /* ワインレッドの段階（700 が基準色。グラデーションはローズゴールドの 500 から 600 → 800 へ） */
+  --color-wine-50: #fdf3f5;
+  --color-wine-100: #fae3e8;
+  --color-wine-200: #f3c6d0;
+  --color-wine-300: #e79bad;
+  --color-wine-400: #d46a84;
+  --color-wine-500: #b9405f;
+  --color-wine-600: #9c2b48;
+  --color-wine-700: #83203b;
+  --color-wine-800: #6a1a31;
+  --color-wine-900: #55152a;
+
+  /* 2 色目のローズゴールド（グラデーションの始点と、背景の淡いにじみに使う）。
+     500 は白い文字を載せても読めるよう、やや深めにしている */
+  --color-rosegold-50: #fdf4ef;
+  --color-rosegold-100: #f9e4d9;
+  --color-rosegold-300: #e3a58c;
+  --color-rosegold-500: #b9664f;
+  --color-rosegold-600: #a3533f;
+}
+
+/* 主要な操作・選択中の状態に使う、ローズゴールド → ワインレッドのグラデーション */
+@utility wine-gradient {
+  background-color: var(--color-wine-700);
+  background-image: linear-gradient(
+    135deg,
+    var(--color-rosegold-500) 0%,
+    var(--color-wine-600) 45%,
+    var(--color-wine-800) 100%
+  );
+}
+
+/* ロゴ（事業者名）の文字に使う同じグラデーション */
+@utility wine-gradient-text {
+  background-image: linear-gradient(135deg, var(--color-rosegold-600) 0%, var(--color-wine-700) 60%, var(--color-wine-800) 100%);
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+}
+
+body {
+  background-color: var(--background);
+  /* 上部の左右に、ローズゴールドとワイン色をほんのり滲ませる（明るさを保つ） */
+  background-image:
+    radial-gradient(700px 320px at 0% 0%, rgb(249 228 217 / 0.9) 0%, rgba(253, 249, 248, 0) 70%),
+    radial-gradient(700px 320px at 100% 0%, #f8e3e8 0%, rgba(253, 249, 248, 0) 70%);
+  background-repeat: no-repeat;
+  color: var(--foreground);
+  font-family: var(--font-sans);
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* キーボード操作でも現在位置が分かるようにする（マウス操作では出さない） */
+:focus-visible {
+  outline: 2px solid #83203b;
+  outline-offset: 2px;
+}
+
+@layer base {
+  /* 押せる要素は、ホバーしたときに指のカーソルにする（Tailwind CSS v4 はボタンの既定が矢印のため）。
+     押せない状態（無効化）は禁止マークにする。個別のクラス（cursor-*）を付けた要素はそちらが優先される。 */
+  button:not(:disabled),
+  [role="button"]:not([aria-disabled="true"]),
+  select:not(:disabled),
+  summary,
+  input[type="checkbox"]:not(:disabled),
+  input[type="radio"]:not(:disabled),
+  input[type="submit"]:not(:disabled),
+  input[type="file"]:not(:disabled),
+  label:has(> input[type="checkbox"]:not(:disabled)),
+  label:has(> input[type="radio"]:not(:disabled)) {
+    cursor: pointer;
+  }
+  button:disabled,
+  select:disabled,
+  input:disabled,
+  [aria-disabled="true"] {
+    cursor: not-allowed;
+  }
+}
